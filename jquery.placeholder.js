@@ -42,12 +42,11 @@
 	$.fn.placeholder.settings = {
 		classname: 'cfp-placeholder',
 		attribute: 'placeholder',
-		disableIfSupported: true,
+		disableIfSupported: true
 	};
 	
 	/**
 	 * Enable standard-style HTML5 placeholders globally
-	 * Only run if placeholders are not supported natively
 	 */
 	$.placeholders = function(settings) {
 		$('input[placeholder]').placeholder(settings);
@@ -78,7 +77,7 @@
 		} else if(el.attr('value' == '')) {
 			el.attr('value', el.attr(opts.attribute))
 		}
-		el.toggleClass($.fn.placeholder.settings.classname);
+		el.toggleClass(opts.classname);
 	}
 	function clearPlaceholdersOnSubmit(opts) {
 		$('form').submit(function(){
