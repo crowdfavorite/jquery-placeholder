@@ -1,70 +1,91 @@
 /**
  * Placeholder
+ * Crowd Favorite
  * @requires jQuery v1.2 or above
  *
  * Version: 1.0
  * Patches the HTML5 placeholder atttribute functionality for browsers that don't support it
  */
 ;(function($) {
-	$.placeholders = function() {
-		/**
-		 * If the browser already supports placeholders, don't run.
+	$.fn.placeholder = function(settings) {
+		// Merge default options and user options
+		var opts = $.extend({}, $.fn.placeholder.settings, settings);
+		
+		/* Are we using the placholder attribute?
+		 * Does the browser support placeholders?
+		 * Should we run if it does?
+		 * If no, exit out.
 		 */
-		if ('placeholder' in document.createElement('input')) {
+		if (opts.attribute == 'placeholder' && opts.disableIfSupported == true && 'placeholder' in document.createElement('input')) {
 			return null;
 		};
 		
-		$('input[placeholder]').each(function(){
+		// Run placholders
+		this.each(function(){
 			var _this = $(this);
-			// Set the placeholdertext attribute to the title
-			prepPlaceholder(_this);
+
+			prepPlaceholder(_this, opts);
 			_this.focus(function(){
-				togglePlaceholder(_this);
+				togglePlaceholder(_this, opts);
 			});
 			_this.blur(function(){
-				togglePlaceholder(_this);
+				togglePlaceholder(_this, opts);
 			});
 		});
-		clearPlaceholdersOnSubmit();
-		
+		clearPlaceholdersOnSubmit(opts);
+	}
+	
+	/**
+	 * Plugin settings defaults
+	 * Set in separate object so they are public
+	 */
+	$.fn.placeholder.settings = {
+		classname: 'cfp-placeholder',
+		attribute: 'placeholder',
+		disableIfSupported: true,
 	};
 	
-	$.placeholders.settings = {
-		classname: 'cfp-placeholder'
+	/**
+	 * Enable standard-style HTML5 placeholders globally
+	 * Only run if placeholders are not supported natively
+	 */
+	$.placeholders = function(settings) {
+		$('input[placeholder]').placeholder(settings);
 	};
 
-	/*Private helper functions */
-	
-	function prepPlaceholder(el) {
-		var c = $.placeholders.settings.classname;
+	/* Private helper functions */
+
+	function prepPlaceholder(el, opts) {
+		var c = opts.classname;
 		
-		if(el.attr('value') == '' || el.attr('value') == el.attr('placeholder')) {
+		if(el.attr('value') == '' || el.attr('value') == el.attr(opts.attribute)) {
 			el.addClass(c);
 			if(el.attr('value') == '') {
-				el.attr('value', el.attr('placeholder'));
+				el.attr('value', el.attr(opts.attribute));
 			}
 		} else {
 			el.removeClass(c);
 		}
 	}
-	function togglePlaceholder(el) {
+	function togglePlaceholder(el, opts) {
 		// Check if the input already has a value...
-		if((el.attr('value') != '') && (el.attr('value') != el.attr('placeholder'))) {
+		if((el.attr('value') != '') && (el.attr('value') != el.attr(opts.attribute))) {
 			return false;
 		}
 		
-		if(el.attr('value') == el.attr('placeholder')) {
+		if(el.attr('value') == el.attr(opts.attribute)) {
 			el.attr('value', '');
 		} else if(el.attr('value' == '')) {
-			el.attr('value', el.attr('placeholder'))
+			el.attr('value', el.attr(opts.attribute))
 		}
-		el.toggleClass($.placeholders.settings.classname);
+		el.toggleClass($.fn.placeholder.settings.classname);
 	}
-	function clearPlaceholdersOnSubmit() {
+	function clearPlaceholdersOnSubmit(opts) {
 		$('form').submit(function(){
-			$('input[placeholder]').each(function(){
+					alert(opts); return false;
+			$(this).find('input').each(function(){
 				var _this = $(this);
-				if(_this.attr('value') == _this.attr('placeholder')) {
+				if(_this.attr('value') == _this.attr(opts.attribute)) {
 					_this.attr('value','');
 				}
 			});
