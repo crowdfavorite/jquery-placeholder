@@ -81,7 +81,6 @@
 	}
 	function clearPlaceholdersOnSubmit(opts) {
 		$('form').submit(function(){
-					alert(opts); return false;
 			$(this).find('input').each(function(){
 				var _this = $(this);
 				if(_this.attr('value') == _this.attr(opts.attribute)) {
