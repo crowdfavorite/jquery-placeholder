@@ -33,7 +33,7 @@
 			});
 		});
 		clearPlaceholdersOnSubmit(opts);
-	}
+	};
 	
 	/**
 	 * Plugin settings defaults
@@ -75,7 +75,7 @@
 		if(el.attr('value') == el.attr(opts.attribute)) {
 			el.attr('value', '');
 		} else if(el.attr('value' == '')) {
-			el.attr('value', el.attr(opts.attribute))
+			el.attr('value', el.attr(opts.attribute));
 		}
 		el.toggleClass(opts.classname);
 	}
