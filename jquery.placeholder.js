@@ -21,7 +21,7 @@
 		};
 		
 		// Run placholders
-		this.each(function(){
+		this.each(function() {
 			var _this = $(this);
 
 			prepPlaceholder(_this, opts);
@@ -61,32 +61,32 @@
 			el.addClass(c);
 			if(el.attr('value') == '') {
 				el.attr('value', el.attr(opts.attribute));
-			}
+			};
 		} else {
 			el.removeClass(c);
-		}
-	}
+		};
+	};
 	function togglePlaceholder(el, opts) {
 		// Check if the input already has a value...
 		if((el.attr('value') != '') && (el.attr('value') != el.attr(opts.attribute))) {
 			return false;
-		}
+		};
 		
 		if(el.attr('value') == el.attr(opts.attribute)) {
 			el.attr('value', '');
 		} else if(el.attr('value' == '')) {
 			el.attr('value', el.attr(opts.attribute));
-		}
+		};
 		el.toggleClass(opts.classname);
-	}
+	};
 	function clearPlaceholdersOnSubmit(opts) {
-		$('form').submit(function(){
+		$('form').submit(function() {
 			$(this).find('input').each(function(){
 				var _this = $(this);
 				if(_this.attr('value') == _this.attr(opts.attribute)) {
 					_this.attr('value','');
-				}
+				};
 			});
 		});
-	}
+	};
 })(jQuery);
