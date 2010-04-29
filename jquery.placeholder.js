@@ -74,19 +74,22 @@
 		
 		if(el.attr('value') == el.attr(opts.attribute)) {
 			el.attr('value', '');
-		} else if(el.attr('value' == '')) {
+		} else if(el.attr('value') == '') {
 			el.attr('value', el.attr(opts.attribute));
 		};
 		el.toggleClass(opts.classname);
 	};
 	function clearPlaceholdersOnSubmit(opts) {
 		$('form').submit(function() {
-			$(this).find('input').each(function(){
-				var _this = $(this);
-				if(_this.attr('value') == _this.attr(opts.attribute)) {
-					_this.attr('value','');
-				};
-			});
+			clearPlaceholders(this, opts);
 		});
 	};
+	clearPlaceholders = function(form, opts) {
+		$(form).find('input').each(function(){
+			_this = $(this);
+			if(_this.attr('value') == _this.attr(opts.attribute)) {
+				_this.attr('value', '');
+			};
+		});
+	}
 })(jQuery);
