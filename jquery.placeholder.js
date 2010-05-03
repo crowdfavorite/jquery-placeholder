@@ -46,7 +46,7 @@
 	};
 	
 	/**
-	 * Enable standard-style HTML5 placeholders globally
+	 * Call this to enable standard-style HTML5 placeholders globally
 	 */
 	$.placeholders = function(settings) {
 		$('input[placeholder]').placeholder(settings);
@@ -57,9 +57,9 @@
 	function prepPlaceholder(el, opts) {
 		var c = opts.classname;
 		
-		if(el.attr('value') == '' || el.attr('value') == el.attr(opts.attribute)) {
+		if(el.val() == '' || el.val() == el.attr(opts.attribute)) {
 			el.addClass(c);
-			if(el.attr('value') == '') {
+			if(el.val() == '') {
 				el.attr('value', el.attr(opts.attribute));
 			};
 		} else {
@@ -68,13 +68,13 @@
 	};
 	function togglePlaceholder(el, opts) {
 		// Check if the input already has a value...
-		if((el.attr('value') != '') && (el.attr('value') != el.attr(opts.attribute))) {
+		if((el.val() != '') && (el.val() != el.attr(opts.attribute))) {
 			return false;
 		};
 		
-		if(el.attr('value') == el.attr(opts.attribute)) {
+		if(el.val() == el.attr(opts.attribute)) {
 			el.attr('value', '');
-		} else if(el.attr('value') == '') {
+		} else if(el.val() == '') {
 			el.attr('value', el.attr(opts.attribute));
 		};
 		el.toggleClass(opts.classname);
