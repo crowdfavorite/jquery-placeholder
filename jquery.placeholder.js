@@ -17,7 +17,7 @@
 		 * If no, exit out.
 		 */
 		if (opts.attribute == 'placeholder' && opts.disableIfSupported == true && 'placeholder' in document.createElement('input')) {
-			return null;
+			return;
 		};
 
 		// Run placholders
@@ -49,7 +49,7 @@
 	 * Call this to enable standard-style HTML5 placeholders globally
 	 */
 	$.placeholders = function(settings) {
-		$('input[placeholder]').placeholder(settings);
+		$('input[placeholder], textarea[placeholder]').placeholder(settings);
 	};
 
 	/* Private helper functions */
@@ -68,7 +68,7 @@
 	function togglePlaceholder(el, opts) {
 		// Check if the input already has a value...
 		if(el.val() && el.val() != el.attr(opts.attribute)) {
-			return false;
+			return;
 		};
 		if(el.val() == el.attr(opts.attribute)) {
 			el.attr('value', '');
