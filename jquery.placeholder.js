@@ -56,7 +56,7 @@
 
 	function prepPlaceholder(el, opts) {
 		var c = opts.classname;
-		if(!el.is(':focus') && (el.val() == '' || el.val() == el.attr(opts.attribute))) {
+		if(!$(el).is(':focus') && (el.val() == '' || el.val() == el.attr(opts.attribute))) {
 			el.addClass(c);
 			if(el.val() == '') {
 				el.attr('value', el.attr(opts.attribute));
