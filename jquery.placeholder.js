@@ -3,13 +3,17 @@
  * Crowd Favorite
  * @requires jQuery v1.2 or above
  *
- * Version: 1.0.1
+ * Version: 1.1
  * Patches the HTML5 placeholder atttribute functionality for browsers that don't support it
  */
 ;(function($) {
 	$.fn.placeholder = function(settings) {
 		// Merge default options and user options
 		var opts = $.extend({}, $.fn.placeholder.settings, settings);
+		var previousElement = null;
+		var placeholderClearOnReload = function() {
+			$('[' + opts.attribute + '].' + opts.classname).val('');
+		}
 
 		/* Are we using the placholder attribute?
 		 * Does the browser support placeholders?
@@ -20,19 +24,41 @@
 			return;
 		};
 
+		/**
+		 * Refocusing previous element:
+		 * jQuery >= 1.6 or a browser supporting document.activeElement is required 
+		 **/
+		if ('undefined' === typeof document.activeElement) {
+			if ($().jquery.split('.') >= '1.6'.split('.')) {
+				previousElement = $($('*:focus').get(0));
+			}
+		}
+		else {
+			previousElement = $(document.activeElement);
+		}
+
 		// Run placholders
 		this.each(function() {
 			var _this = $(this);
 
-			prepPlaceholder(_this, opts);
 			_this.focus(function(){
-				togglePlaceholder(_this, opts);
-			});
+				focusPlaceholder(_this, opts);
+			})
 			_this.blur(function(){
-				togglePlaceholder(_this, opts);
+				blurPlaceholder(_this, opts);
 			});
+			_this.blur();
+			_this.parents('form').submit(function() {
+
+			});
+			if (_this.filter($(previousElement)).length) {
+				$(previousElement).focus();
+			}
 		});
-		clearPlaceholdersOnSubmit(opts);
+
+
+		$(window).unbind('unload', placeholderClearOnReload);
+		$(window).unload(placeholderClearOnReload);
 	};
 
 	/**
@@ -46,48 +72,37 @@
 	};
 
 	/**
-	 * Call this to enable standard-style HTML5 placeholders globally
+	 * Call this to enable standard-style HTML5 placeholders globally (on any element with a placeholder attribute)
 	 */
 	$.placeholders = function(settings) {
-		$('input[placeholder], textarea[placeholder]').placeholder(settings);
+		$('[' + settings.attribute + ']').placeholder(settings);
 	};
 
 	/* Private helper functions */
 
-	function prepPlaceholder(el, opts) {
-		var c = opts.classname;
-		if(!$(el).is(':focus') && (el.val() == '' || el.val() == el.attr(opts.attribute))) {
-			el.addClass(c);
-			if(el.val() == '') {
-				el.attr('value', el.attr(opts.attribute));
-			};
-		} else {
-			el.removeClass(c);
-		};
+	function focusPlaceholder(el, opts) {
+		el = $(el);
+		if (el.hasClass(opts.classname)) {
+			el.val('');
+			el.removeClass(opts.classname);
+		}
 	};
-	function togglePlaceholder(el, opts) {
-		// Check if the input already has a value...
-		if(el.val() && el.val() != el.attr(opts.attribute)) {
-			return;
-		};
-		if(el.val() == el.attr(opts.attribute)) {
-			el.attr('value', '');
-		} else if(!el.val()) {
-			el.attr('value', el.attr(opts.attribute));
-		};
-		el.toggleClass(opts.classname);
+
+	function blurPlaceholder(el, opts) {
+		el = $(el);
+		if (el.val() === '') {
+			el.addClass(opts.classname);
+			el.val(el.attr(opts.attribute));
+		}
 	};
-	function clearPlaceholdersOnSubmit(opts) {
-		$('form').submit(function() {
-			clearPlaceholders(this, opts);
-		});
-	};
-	clearPlaceholders = function(form, opts) {
-		$(form).find('input').each(function(){
-			_this = $(this);
-			if(_this.val() == _this.attr(opts.attribute)) {
-				_this.attr('value', '');
+
+	function clearPlaceholdersOnSubmit(form, opts) {
+		$(form).find('[' + opts.attribute + ']').each(function(){
+			var input = $(this);
+			if(input.hasClass(opts.classname)) {
+				input.val('');
 			};
 		});
 	};
+
 })(jQuery);
