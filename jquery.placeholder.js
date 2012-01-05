@@ -75,7 +75,8 @@
 	 * Call this to enable standard-style HTML5 placeholders globally (on any element with a placeholder attribute)
 	 */
 	$.placeholders = function(settings) {
-		$('[' + settings.attribute + ']').placeholder(settings);
+		var opts = $.extend({}, $.fn.placeholder.settings, settings);
+		$('[' + opts.attribute + ']').placeholder(opts);
 	};
 
 	/* Private helper functions */
