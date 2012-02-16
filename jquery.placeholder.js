@@ -3,7 +3,7 @@
  * Crowd Favorite
  * @requires jQuery v1.2 or above
  *
- * Version: 1.1
+ * Version: 1.1.1
  * Patches the HTML5 placeholder atttribute functionality for browsers that don't support it
  */
 ;(function($) {
@@ -49,7 +49,7 @@
 			});
 			_this.blur();
 			_this.parents('form').submit(function() {
-
+				clearPlaceholdersOnSubmit(this, opts);
 			});
 			if (_this.filter($(previousElement)).length) {
 				$(previousElement).focus();
