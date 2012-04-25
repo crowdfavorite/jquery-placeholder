@@ -3,7 +3,7 @@
  * Crowd Favorite
  * @requires jQuery v1.2 or above
  *
- * Version: 1.1.1
+ * Version: 1.2
  * Patches the HTML5 placeholder atttribute functionality for browsers that don't support it
  */
 ;(function($) {
@@ -39,14 +39,34 @@
 
 		// Run placholders
 		this.each(function() {
-			var _this = $(this);
-
-			_this.focus(function(){
-				focusPlaceholder(_this, opts);
-			})
-			_this.blur(function(){
-				blurPlaceholder(_this, opts);
-			});
+			var _this = $(this),
+				isPassword = (_this.attr('type').toLowerCase() == 'password'),
+				$placeholderInput;
+				
+			if (isPassword) {
+				// We have to write a custom input element here to simulate placeholder since a password field will mask the characters.
+				$placeholderInput = $('<input type="text" id="'+_this.attr('id')+'-placeholder" value="'+_this.attr('placeholder')+'" />');
+				$placeholderInput.focus(function() {
+					$placeholderInput.hide();
+					_this.show().focus();
+				});
+				_this.blur(function() {
+					if (_this.val() == '') {
+						// Only do this if the field is empty.
+						$placeholderInput.show().attr('class', _this.attr('class')).attr('style', _this.attr('style'));;
+						_this.hide();
+					}
+				});
+				_this.after($placeholderInput);
+			}
+			else {
+				_this.focus(function(){
+					focusPlaceholder(_this, opts);
+				})
+				_this.blur(function(){
+					blurPlaceholder(_this, opts);
+				});
+			}
 			_this.blur();
 			_this.parents('form').submit(function() {
 				clearPlaceholdersOnSubmit(this, opts);
