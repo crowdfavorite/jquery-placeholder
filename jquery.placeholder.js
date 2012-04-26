@@ -53,7 +53,8 @@
 				_this.blur(function() {
 					if (_this.val() == '') {
 						// Only do this if the field is empty.
-						$placeholderInput.show().attr('class', _this.attr('class')).attr('style', _this.attr('style'));;
+						$placeholderInput.show().attr('class', _this.attr('class'));
+						$placeholderInput.attr('style', _this.attr('style'));
 						_this.hide();
 					}
 				});
